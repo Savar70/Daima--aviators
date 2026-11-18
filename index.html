@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#091321"><title>DAIMA AVIATOR</title>
+<style>
+:root{--bg:#081321;--panel:#101f32;--panel2:#162940;--red:#ff4057;--green:#31d69a;--muted:#9bb0c7;--white:#f4f8fc}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -20%,#193656 0,#081321 48%);color:var(--white);font:15px system-ui,Arial,sans-serif}
+header{padding:18px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #263b52;position:sticky;top:0;background:#091524ed;backdrop-filter:blur(12px);z-index:2}
+.brand{font-weight:900;letter-spacing:1.5px;font-size:20px}.brand span{color:var(--red)}.tag{font-size:10px;color:var(--muted);letter-spacing:2px}
+.wrap{max-width:900px;margin:auto;padding:18px 14px 42px}.notice{background:#392c16;border:1px solid #82632c;color:#ffdfa0;padding:11px 13px;border-radius:12px;font-size:12px;line-height:1.5;margin-bottom:15px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}.stat,.card{background:linear-gradient(145deg,#14263b,#0e1c2d);border:1px solid #263c55;border-radius:15px;padding:13px}.stat small{display:block;color:var(--muted);font-size:11px}.stat b{font-size:19px;display:block;margin-top:5px}
+.game{border:1px solid #29425e;border-radius:18px;overflow:hidden;background:#091726}.gamehead{display:flex;justify-content:space-between;align-items:center;padding:13px 15px;background:#102238}.pill{font-size:11px;padding:5px 9px;border-radius:20px;background:#263d55;color:#c8d9e9}
+.stage{height:250px;position:relative;overflow:hidden;background:linear-gradient(#102b48,#091725 75%)}.stage:before{content:"";position:absolute;inset:0;background:linear-gradient(155deg,transparent 54%,#183958 54.3%,transparent 55%),linear-gradient(160deg,transparent 66%,#17324d 66.3%,transparent 67%);opacity:.8}
+.mult{position:absolute;top:35%;left:0;right:0;text-align:center;font-size:clamp(42px,10vw,68px);font-weight:900;letter-spacing:-2px;text-shadow:0 4px 20px #0008}.sub{position:absolute;top:63%;left:0;right:0;text-align:center;color:var(--muted);font-size:12px}
+.plane{position:absolute;left:12%;bottom:20%;font-size:42px;transform:rotate(-12deg);filter:drop-shadow(0 4px 8px #0008);transition:left .1s linear,bottom .1s linear}
+.controls{padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;color:var(--muted);font-size:11px;margin:0 0 6px}.field input{width:100%;background:#091726;border:1px solid #304b68;border-radius:10px;padding:12px;color:white;font-size:16px;outline:none}.btn{border:0;border-radius:11px;padding:13px;font-weight:800;font-size:14px;cursor:pointer}.primary{background:var(--green);color:#052318}.danger{background:var(--red);color:white}.secondary{background:#263d55;color:white}.btn:disabled{opacity:.45;cursor:not-allowed}.wide{grid-column:1/-1}
+.section{margin-top:16px}.section h2{font-size:16px;margin:0 0 10px}.tabs{display:flex;gap:8px;margin-bottom:12px}.tab{flex:1;background:#14263b;border:1px solid #29425e;color:#c7d6e5;padding:10px;border-radius:10px}.tab.active{background:#25435f;color:white;border-color:#5a85ae}
+.history{width:100%;border-collapse:collapse;font-size:12px}.history th,.history td{text-align:left;padding:10px 7px;border-bottom:1px solid #263b52}.history th{color:var(--muted);font-weight:600}.win{color:var(--green)}.loss{color:#ff7787}.empty{text-align:center;color:var(--muted);padding:22px}
+footer{text-align:center;color:#7289a2;font-size:11px;padding:22px 8px}
+@media(max-width:430px){.stats{gap:6px}.stat{padding:10px}.stat b{font-size:16px}.stage{height:220px}}
+</style></head>
+<body>
+<header><div><div class="brand">DAIMA <span>AVIATOR</span></div><div class="tag">PRACTICE MODE</div></div><span class="pill">KES • VIRTUAL</span></header>
+<main class="wrap">
+<div class="notice"><b>DEMO ONLY:</b> This prototype uses virtual credits and simulated game outcomes. It does not accept deposits, place real bets, or pay cash. No profit is guaranteed.</div>
+<div class="stats">
+ <div class="stat"><small>VIRTUAL BALANCE</small><b id="balance">KSh 10,000</b></div>
+ <div class="stat"><small>NET RESULT</small><b id="net">KSh 0</b></div>
+ <div class="stat"><small>ROUNDS PLAYED</small><b id="rounds">0</b></div>
+</div>
+<section class="game">
+ <div class="gamehead"><b>✈ Flight round</b><span class="pill" id="status">READY</span></div>
+ <div class="stage"><div class="mult" id="mult">1.00x</div><div class="sub" id="message">Place a virtual practice bet to begin</div><div class="plane" id="plane">✈</div></div>
+ <div class="controls">
+  <div class="field"><label for="stake">VIRTUAL BET (KSh)</label><input id="stake" type="number" min="10" max="10000" step="10" value="100"></div>
+  <div class="field"><label for="auto">AUTO CASH OUT (x) — OPTIONAL</label><input id="auto" type="number" min="1.01" max="100" step=".01" placeholder="e.g. 2.00"></div>
+  <button class="btn primary wide" id="start">START PRACTICE ROUND</button>
+  <button class="btn danger wide" id="cash" disabled>CASH OUT</button>
+ </div>
+</section>
+
+
+<section class="section card" id="mpesa">
+ <h2>M-Pesa deposit setup</h2>
+ <p style="color:var(--muted);font-size:12px;margin-top:0">Minimum planned deposit: KSh 100. Payment is a non-functional preview; no STK Push will be sent and no money will be collected.</p>
+ <div class="field" style="margin-bottom:10px"><label for="depositAmount">DEPOSIT AMOUNT (KES)</label><input id="depositAmount" type="number" min="100" step="1" value="100"></div>
+ <div class="field" style="margin-bottom:10px"><label for="depositPhone">M-PESA PHONE NUMBER</label><input id="depositPhone" type="tel" placeholder="07XXXXXXXX or 01XXXXXXXX"></div>
+ <button class="btn secondary wide" id="stkPreview" type="button">PREVIEW STK PUSH</button>
+ <p id="stkMessage" style="font-size:12px;color:#ffdfa0;line-height:1.5;margin-bottom:0">Live payments are disabled. Do not enter your M-Pesa PIN here. A secure server, Daraja production credentials, callback verification, and applicable regulatory approvals are required before activation.</p>
+</section>
+
+<section class="section card" id="account">
+ <h2>DAIMA member sign in</h2>
+ <p style="color:var(--muted);font-size:12px;margin-top:0">Account screen preview. Online registration and authentication are not connected yet.</p>
+ <div class="field" style="margin-bottom:10px"><label for="accountName">FULL NAME</label><input id="accountName" placeholder="Enter your full name" maxlength="60"></div>
+ <div class="field" style="margin-bottom:10px"><label for="accountPhone">PHONE NUMBER</label><input id="accountPhone" type="tel" placeholder="e.g. 07XXXXXXXX" maxlength="15"></div>
+ <div class="field" style="margin-bottom:10px"><label for="accountEmail">EMAIL (OPTIONAL)</label><input id="accountEmail" type="email" placeholder="you@example.com"></div>
+ <button class="btn secondary wide" id="registerPreview" type="button">PREVIEW REGISTRATION</button>
+ <p id="accountMsg" style="font-size:12px;color:#ffdfa0;line-height:1.5;margin-bottom:0">Do not enter a password, M-Pesa PIN, ID number or other sensitive information here. This preview does not create a real account.</p>
+</section>
+
+<section class="section card">
+ <h2>Member account</h2>
+ <p style="color:var(--muted);font-size:12px;margin-top:0">Preloaded demo profile. This is stored only in this browser prototype; it is not a verified or secure online account.</p>
+ <div class="controls" style="padding:0">
+  <div class="field"><label for="member">MEMBER NAME</label><input id="member" maxlength="30" value="Dave" autocomplete="name"></div>
+  <div class="field"><label for="phone">PHONE NUMBER</label><input id="phone" type="tel" value="0112736608" autocomplete="tel" readonly></div>
+  <button class="btn secondary wide" id="save">SAVE DEMO PROFILE</button>
+ </div><p id="profileMsg" style="font-size:12px;color:var(--green);margin-bottom:0">Demo profile loaded: Dave</p>
+</section>
+<section class="section card">
+ <div class="tabs"><button class="tab active" id="historyTab">Game history</button><button class="tab" id="helpTab">How it works</button></div>
+ <div id="historyPanel"><table class="history"><thead><tr><th>TIME</th><th>BET</th><th>RESULT</th><th>NET</th></tr></thead><tbody id="rows"><tr><td colspan="4" class="empty">No practice rounds yet</td></tr></tbody></table></div>
+ <div id="helpPanel" hidden style="color:var(--muted);font-size:13px;line-height:1.6">This is a visual practice simulator. Start a round using virtual credits, then cash out before the simulated flight ends. Outcomes are randomly simulated and are not predictions of any real Aviator game. Refreshing this page resets the demo balance and history.</div>
+</section>
+<footer>DAIMA AVIATOR • Prototype for demonstration • Virtual credits only</footer>
+</main>
+<script>
+let balance=10000,net=0,rounds=0,running=false,cashed=false,stake=100,mult=1,crashAt=0,timer=null,startAt=0;
+const $=id=>document.getElementById(id), money=n=>'KSh '+Math.round(n).toLocaleString('en-KE');
+function update(){ $('balance').textContent=money(balance);$('net').textContent=(net>=0?'+':'−')+money(Math.abs(net));$('net').style.color=net>=0?'#31d69a':'#ff7787';$('rounds').textContent=rounds; }
+function finish(won,at){if(!running)return;running=false;clearInterval(timer);$('cash').disabled=true;$('start').disabled=false;$('status').textContent=won?'CASHED OUT':'FLEW AWAY';$('message').textContent=won?'Practice payout added to virtual balance':'The plane flew away — practice loss';let payout=won?Math.floor(stake*at):0;let delta=payout-stake;if(won)balance+=payout;net+=delta;rounds++;update();addRow(stake,at,delta,won);cashed=true;}
+function addRow(bet,at,delta,won){let tr=document.createElement('tr');[new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),money(bet),won?at.toFixed(2)+'x':'Crashed',(delta>=0?'+':'−')+money(Math.abs(delta))].forEach((v,i)=>{let td=document.createElement('td');td.textContent=v;if(i===2||i===3)td.className=won?'win':'loss';tr.appendChild(td)});let body=$('rows');if(body.querySelector('.empty'))body.innerHTML='';body.prepend(tr);}
+$('start').onclick=()=>{let s=Number($('stake').value),a=$('auto').value?Number($('auto').value):null;if(!Number.isFinite(s)||s<10||s>10000||s>balance){alert('Enter a virtual bet from KSh 10 to KSh 10,000, within your balance.');return;}if(a!==null&&(!Number.isFinite(a)||a<1.01||a>100)){alert('Auto cash out must be between 1.01x and 100x.');return;}stake=s;balance-=stake;update();running=true;cashed=false;mult=1;startAt=Date.now();crashAt=1.05+Math.pow(Math.random(),2.4)*9.5;$('start').disabled=true;$('cash').disabled=false;$('status').textContent='IN FLIGHT';$('message').textContent='Flight in progress';$('plane').style.left='12%';$('plane').style.bottom='20%';timer=setInterval(()=>{let elapsed=(Date.now()-startAt)/1000;mult=Math.exp(elapsed*.22);$('mult').textContent=mult.toFixed(2)+'x';$('plane').style.left=Math.min(82,12+elapsed*8)+'%';$('plane').style.bottom=Math.min(75,20+elapsed*5)+'%';if(a&&mult>=a&&a<crashAt){finish(true,a);$('mult').textContent=a.toFixed(2)+'x';}else if(mult>=crashAt){$('mult').textContent=crashAt.toFixed(2)+'x';finish(false,crashAt);}},100);};
+$('cash').onclick=()=>{if(running)finish(true,mult);};
+$('save').onclick=()=>{let n=$('member').value.trim();if(!n){$('profileMsg').textContent='Enter a display name first.';return;}$('profileMsg').textContent='Demo profile saved for '+n+' ('+$('phone').value+'). This is not a secure online account.';};
+$('historyTab').onclick=()=>{$('historyPanel').hidden=false;$('helpPanel').hidden=true;$('historyTab').classList.add('active');$('helpTab').classList.remove('active')};
+$('helpTab').onclick=()=>{$('historyPanel').hidden=true;$('helpPanel').hidden=false;$('helpTab').classList.add('active');$('historyTab').classList.remove('active')};
+
+$('registerPreview').onclick=()=>{
+ const name=$('accountName').value.trim();
+ const phone=$('accountPhone').value.trim();
+ const email=$('accountEmail').value.trim();
+ if(name.length<2 || !/^(?:\+?254|0)?[17]\d{8}$/.test(phone.replace(/\s/g,''))){
+   $('accountMsg').textContent='Enter your name and a valid Kenyan mobile number (for example 07XXXXXXXX or 01XXXXXXXX).';
+   $('accountMsg').style.color='#ff9aa6'; return;
+ }
+ $('accountMsg').textContent='Registration preview ready for '+name+' ('+phone+'). No account has been created: secure server-side authentication must be connected before members can sign in across devices.';
+ $('accountMsg').style.color='#ffdfa0';
+};
+
+
+$('stkPreview').onclick=()=>{
+ const amount=Number($('depositAmount').value);
+ const phone=$('depositPhone').value.trim().replace(/\s/g,'');
+ if(!Number.isFinite(amount)||amount<100||!Number.isInteger(amount)){
+   $('stkMessage').textContent='Minimum deposit is KSh 100. Enter a whole-number amount.';
+   $('stkMessage').style.color='#ff9aa6'; return;
+ }
+ if(!/^(?:\+?254|0)?[17]\d{8}$/.test(phone)){
+   $('stkMessage').textContent='Enter a valid Kenyan mobile number (07XXXXXXXX or 01XXXXXXXX).';
+   $('stkMessage').style.color='#ff9aa6'; return;
+ }
+ $('stkMessage').textContent='Preview ready: KSh '+amount.toLocaleString('en-KE')+' to '+phone+'. No payment request was sent and no money was charged. Live integration remains disabled pending secure backend setup and required approvals.';
+ $('stkMessage').style.color='#ffdfa0';
+};
+
+update();
+</script></body></html>
